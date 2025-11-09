@@ -3,16 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def load_image_local(path: str) -> np.ndarray:
+    """Wczytuje obraz z dysku (w formacie BGR zgodnym z OpenCV)."""
     img = cv2.imread(path)
     if img is None:
         raise FileNotFoundError(f"Nie znaleziono pliku: {path}")
     return img
 
 def show_image(img: np.ndarray, title: str = "Obraz", is_gray: bool = False):
+    """Wyświetla obraz za pomocą matplotlib."""
     plt.figure()
     if is_gray:
         plt.imshow(img, cmap="gray")
     else:
+        # Konwersja BGR (OpenCV) -> RGB (matplotlib)
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         plt.imshow(img_rgb)
     plt.title(title)
@@ -38,19 +41,19 @@ def rotate_90_clockwise(img: np.ndarray) -> np.ndarray:
     return rotated
 
 def main():
+    # Ścieżka do obrazu – upewnij się, że plik jest w folderze images/
     path = "images/Yacht.jpg"
-    original = load_image_local(path)
-    show_image(original, title="Oryginalny obraz")
 
-    resized = resize_half(original)
-    show_image(resized, title="Po zmniejszeniu 50%")
-def main():
-    path = "images/Yacht.jpg"
+    # 0. Wczytanie obrazu
     original = load_image_local(path)
-    show_image(original, title="Oryginalny obraz")
+
+    print("Oryginalny rozmiar (szer x wys):", original.shape[1], "x", original.shape[0])
 
     # 1. Zmniejszenie rozdzielczości
     resized = resize_half(original)
+    print("Po zmniejszeniu 50% (szer x wys):", resized.shape[1], "x", resized.shape[0])
+
+    show_image(original, title="Oryginalny obraz")
     show_image(resized, title="Po zmniejszeniu 50%")
 
     # 2. Grayscale
@@ -62,7 +65,7 @@ def main():
     show_image(rotated, title="Po obrocie o 90°", is_gray=True)
 
     # 4. Wyświetlenie macierzy
-    print("Kształt macierzy:", rotated.shape)
+    print("Kształt macierzy po wszystkich operacjach:", rotated.shape)
     print("Fragment macierzy (pierwsze 5x5 pikseli):")
     print(rotated[:5, :5])
 
